@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Banner</key>
+	<dict>
+		<key>Phone</key>
+		<array>
+			<string>ca-app-pub-4069254562081404/3633297212</string>
+		</array>
+		<key>Pad</key>
+		<array>
+			<string>ca-app-pub-4069254562081404/2320215546</string>
+		</array>
+	</dict>
+	<key>Rect</key>
+	<dict>
+		<key>Phone</key>
+		<array>
+			<string></string>
+		</array>
+		<key>Pad</key>
+		<array>
+			<string></string>
+		</array>
+	</dict>
+	<key>Interstitial</key>
+	<dict>
+		<key>Phone</key>
+		<array>
+			<string>ca-app-pub-4069254562081404/9287226372</string>
+		</array>
+		<key>Pad</key>
+		<array>
+			<string>ca-app-pub-4069254562081404/7133558528</string>
+		</array>
+	</dict>
+	<key>Reward</key>
+	<dict>
+		<key>Phone</key>
+		<array>
+			<string></string>
+		</array>
+		<key>Pad</key>
+		<array>
+			<string></string>
+		</array>
+	</dict>
+	<key>ProjectCode</key>
+	<string>OOG105</string>
+</dict>
+</plist>
