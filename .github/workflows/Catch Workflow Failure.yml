@@ -1,0 +1,24 @@
+name: Catch Workflow Failure
+
+on:
+  workflow_run:
+    workflows: [Trigger workflow, Choose Workflow, Export and Upload to App Store Connect, QA Test]
+    types: [completed]
+
+jobs:
+  on-failure:
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Set ENV
+        id: setEnv
+        run: |
+          # 获取仓库名称
+          repository_name="${{ github.repository }}"
+          repository_name="${repository_name#*/}"  # 删除第一个斜杠及之前的内容
+          echo "REPOSITORY_NAME=$repository_name" >> "$GITHUB_ENV"
+          echo "REPOSITORY_NAME=$repository_name" >> "$GITHUB_OUTPUT"
+
+      - name: Slack upload metadata finish message
+        run: |
+          bundle exec fastlane slack_message messageText:"自动化打包流程运行失败\n*${{ env.REPOSITORY_NAME }}*\n<!subteam^S01K6B7A338> 自动化打包流程运行失败，请检查：<${{ github.event.workflow_run.html_url }}|前往Github Action>'\n*时间：* $(TZ=$TZ-8 date +%Y年%m月%d日%H:%M:%S)\n" isFailMessage:true

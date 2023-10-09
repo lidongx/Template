@@ -1,0 +1,73 @@
+name: Trigger workflow
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'fastlane/release-notes.txt'
+  pull_request:
+    types:
+      - closed
+
+# 使用并发
+concurrency:
+  # 组名
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # 是否取消当前正在进行的进程
+  cancel-in-progress: true
+
+jobs:
+  DownloadFile:
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    runs-on: self-hosted
+    outputs:
+      REPOSITORY_NAME: ${{ steps.setEnv.outputs.REPOSITORY_NAME }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set ENV
+        id: setEnv
+        run: |
+          # 获取仓库名称
+          repository_name="${{ github.repository }}"
+          repository_name="${repository_name#*/}"  # 删除第一个斜杠及之前的内容
+          echo "REPOSITORY_NAME=$repository_name" >> "$GITHUB_ENV"
+          echo "REPOSITORY_NAME=$repository_name" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: retro-labs/tools-scripting
+          token: ${{ secrets.GH_PAT }}
+          ref: main
+          path: envFiles
+
+      - name: remove .git Documents & rsync files
+        run: |
+          BACKUP_DIR_PATH=${HOME}"/Documents/Backup/"
+          rm -rf ./envFiles/.git
+          cp -r ./envFiles ${BACKUP_DIR_PATH}
+          rm -rf ./envFiles/.github
+          rsync -av --ignore-existing envFiles/ ./
+          cp ./fastlane/${{ env.REPOSITORY_NAME }}/* ./fastlane/ && rm -rf ./fastlane/${{ env.REPOSITORY_NAME }}
+          rm -rf ./envFiles
+
+  ChooseWorkflow_OOG:
+    if: contains('${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}', 'oog')
+    needs: DownloadFile
+    uses: retro-labs/tools-scripting/.github/workflows/ChooseWorkflow_OOG.yml@main
+    with:
+      ProjectName: "${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}"
+      BranchName: "${{ github.ref_name }}"
+    secrets: inherit
+  
+  ChooseWorkflow_NOTM:
+    if: contains('${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}', 'notm')
+    needs: DownloadFile
+    uses: retro-labs/tools-scripting/.github/workflows/ChooseWorkflow_NOTM.yml@main
+    with:
+      ProjectName: "${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}"
+      BranchName: "${{ github.ref_name }}"
+    secrets: inherit

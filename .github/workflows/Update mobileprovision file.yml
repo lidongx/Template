@@ -1,0 +1,36 @@
+name: Update mobileprovision file
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - master
+    paths:
+      - 'mobileprovision/*.mobileprovision'
+
+# 使用并发
+concurrency:
+  # 组名
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # 是否取消当前正在进行的进程
+  cancel-in-progress: true
+
+jobs:
+  Update:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update mobileprovision file
+        run: |
+          MOBILEPROVISION_FOLDER=./mobileprovision
+
+          cd $MOBILEPROVISION_FOLDER
+          for file in $(ls); do
+              if [ ! -d $MOBILEPROVISION_FOLDER"/"$file ]; then
+                  echo ******$MOBILEPROVISION_FOLDER"/"$file******
+                  open $file
+              fi
+          done
