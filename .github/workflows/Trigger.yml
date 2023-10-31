@@ -23,6 +23,7 @@ jobs:
     runs-on: self-hosted
     outputs:
       REPOSITORY_NAME: ${{ steps.setEnv.outputs.REPOSITORY_NAME }}
+      GROUP_NAME: ${{ steps.setEnv.outputs.GROUP_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,6 +37,20 @@ jobs:
           echo "REPOSITORY_NAME=$repository_name" >> "$GITHUB_ENV"
           echo "REPOSITORY_NAME=$repository_name" >> "$GITHUB_OUTPUT"
 
+          group_name=""
+          workspace_path="${{ github.workspace }}"
+          runner_name="actions-runner-2"
+
+          if [[ $workspace_path == *$runner_name* ]]; then
+            group_name="Backup-Group"
+            echo "my_string 包含子字符串 '$runner_name'"
+          else
+            group_name="Default"
+            echo "my_string 不包含子字符串 '$runner_name'"
+          fi
+          echo "$group_name"
+          echo "GROUP_NAME=$group_name" >> "$GITHUB_OUTPUT"
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -47,27 +62,19 @@ jobs:
       - name: remove .git Documents & rsync files
         run: |
           BACKUP_DIR_PATH=${HOME}"/Documents/Backup/"
+          rm -rf ${BACKUP_DIR_PATH}/envFiles
           rm -rf ./envFiles/.git
-          cp -r ./envFiles ${BACKUP_DIR_PATH}
+          cp -rf ./envFiles ${BACKUP_DIR_PATH}
           rm -rf ./envFiles/.github
           rsync -av --ignore-existing envFiles/ ./
           cp ./fastlane/${{ env.REPOSITORY_NAME }}/* ./fastlane/ && rm -rf ./fastlane/${{ env.REPOSITORY_NAME }}
           rm -rf ./envFiles
 
-  ChooseWorkflow_OOG:
-    if: contains('${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}', 'oog')
+  ChooseWorkflow:
     needs: DownloadFile
-    uses: retro-labs/tools-scripting/.github/workflows/ChooseWorkflow_OOG.yml@main
+    uses: retro-labs/tools-scripting/.github/workflows/ChooseWorkflow.yml@main
     with:
       ProjectName: "${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}"
       BranchName: "${{ github.ref_name }}"
-    secrets: inherit
-  
-  ChooseWorkflow_NOTM:
-    if: contains('${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}', 'notm')
-    needs: DownloadFile
-    uses: retro-labs/tools-scripting/.github/workflows/ChooseWorkflow_NOTM.yml@main
-    with:
-      ProjectName: "${{ needs.DownloadFile.outputs.REPOSITORY_NAME }}"
-      BranchName: "${{ github.ref_name }}"
+      RunnerName: "${{ needs.DownloadFile.outputs.GROUP_NAME }}"
     secrets: inherit

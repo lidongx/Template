@@ -3,11 +3,11 @@ name: Update mobileprovision file
 on:
   push:
     branches:
-      - develop
       - main
       - master
+      - develop
     paths:
-      - 'mobileprovision/*.mobileprovision'
+      - "mobileprovision/*.mobileprovision"
 
 # 使用并发
 concurrency:

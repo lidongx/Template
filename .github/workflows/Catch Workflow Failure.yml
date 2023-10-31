@@ -21,4 +21,4 @@ jobs:
 
       - name: Slack upload metadata finish message
         run: |
-          bundle exec fastlane slack_message messageText:"自动化打包流程运行失败\n*${{ env.REPOSITORY_NAME }}*\n<!subteam^S01K6B7A338> 自动化打包流程运行失败，请检查：<${{ github.event.workflow_run.html_url }}|前往Github Action>'\n*时间：* $(TZ=$TZ-8 date +%Y年%m月%d日%H:%M:%S)\n" isFailMessage:true
+          bundle exec fastlane slack_message messageText:"自动化打包流程运行失败\n*${{ env.REPOSITORY_NAME }}*\n<!subteam^S01K6B7A338> 自动化打包流程运行失败，请检查：<${{ github.event.workflow_run.html_url }}|前往Github Action>\n*时间：* $(TZ=$TZ-8 date +%Y年%m月%d日%H:%M:%S)\n" isFailMessage:true
