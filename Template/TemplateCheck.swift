@@ -21,7 +21,6 @@ class Template{
             AppConfigPlistConfigation(isChecked: false),
             OneSignalNotificationServiceExtensionConfigation(isChecked: false),
             AssociatedDomainsConfigation(isChecked: false)
-            
         ]
         for item in items{
             item.valid()
@@ -40,7 +39,7 @@ struct MixpanelTokenConfigation :ConfigationCheck {
     var isChecked: Bool = !mixpanelToken.isEmpty
     func valid() {
         if !isChecked{
-            debugLog("QACheck中mixpanelToken没有被设置")
+            debugLog("⚠️QACheck中mixpanelToken没有被设置")
         }
     }
 }
@@ -50,7 +49,7 @@ struct OneSignalAppIdConfigation : ConfigationCheck{
     var isChecked: Bool = !oneSignalAppId.isEmpty
     func valid() {
         if !isChecked{
-            debugLog("QACheck中oneSignalAppId没有被设置")
+            debugLog("⚠️QACheck中oneSignalAppId没有被设置")
         }
     }
 }
@@ -62,12 +61,12 @@ struct GoogleInfoPlistConfigation : ConfigationCheck{
         let path = Bundle.main.path(forResource: "GoogleService-Info.plist", ofType: nil)
         if let path = path ,FileManager.default.fileExists(atPath: path){
         }else{
-            debugLog("GoogleService-Info.plist 项目中不存在")
+            debugLog("⚠️GoogleService-Info.plist 项目中不存在")
             return
         }
         
         if !isChecked{
-            debugLog("GoogleService-Info.plist 需要替换 以及文件下面的正式的测试的文件，如果已经更改将isChecked设置为true")
+            debugLog("⚠️GoogleService-Info.plist 需要替换 以及文件下面的正式的测试的文件，如果已经更改将isChecked设置为true")
         }
     }
 }
@@ -77,7 +76,7 @@ struct InfoPlistGADApplicationIdentifierConfigation : ConfigationCheck{
     var isChecked: Bool
     func valid() {
         if !isChecked{
-            debugLog("Info.plist中GADApplicationIdentifier需要更改")
+            debugLog("⚠️Info.plist中GADApplicationIdentifier需要更改")
         }
     }
 }
@@ -87,7 +86,7 @@ struct InfoPlistURLSchemeConfigation : ConfigationCheck{
     var isChecked: Bool
     func valid() {
         if !isChecked{
-            debugLog("Info.plist中URLScheme需要增加新的")
+            debugLog("⚠️Info.plist中URLScheme需要增加新的")
         }
     }
 }
@@ -99,11 +98,11 @@ struct AppConfigPlistConfigation : ConfigationCheck{
         let path = Bundle.main.path(forResource: "AppConfig.plist", ofType: nil)
         if let path = path ,FileManager.default.fileExists(atPath: path){
         }else{
-            debugLog("AppConfig.plist 项目中不存在")
+            debugLog("⚠️AppConfig.plist 项目中不存在")
             return
         }
         if !isChecked{
-            debugLog("AppConfig.Plist中广告id和ProjectCode需要更改")
+            debugLog("⚠️AppConfig.Plist中广告id和ProjectCode需要更改")
         }
     }
 }
@@ -112,7 +111,7 @@ struct OneSignalNotificationServiceExtensionConfigation : ConfigationCheck{
     var isChecked: Bool
     func valid() {
         if !isChecked{
-            debugLog("OneSignalNotificationServiceExtension.entitlements中App Groups的id需要被替换")
+            debugLog("⚠️OneSignalNotificationServiceExtension.entitlements中App Groups的id需要被替换")
         }
     }
 }
@@ -123,7 +122,7 @@ struct RevenueCatAIPKeyConfigation : ConfigationCheck{
     var isChecked: Bool
     func valid() {
         if !isChecked{
-            debugLog("QACheck中需要设置revenueCatAIPKey")
+            debugLog("⚠️QACheck中需要设置revenueCatAIPKey")
         }
     }
 }
@@ -133,7 +132,7 @@ struct RevenueCatIdentifyConfigation : ConfigationCheck{
     var isChecked: Bool
     func valid() {
         if !isChecked{
-            debugLog("QACheck中需要设置revenueCatIdentify")
+            debugLog("⚠️QACheck中需要设置revenueCatIdentify")
         }
     }
 }
@@ -143,7 +142,7 @@ struct AssociatedDomainsConfigation : ConfigationCheck{
     var isChecked: Bool
     func valid() {
         if !isChecked{
-            debugLog("AssociatedDomains deeplink 需要更新")
+            debugLog("⚠️AssociatedDomains deeplink 需要更新")
         }
     }
 }
